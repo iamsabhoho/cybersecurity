@@ -1,6 +1,8 @@
 ## Credits
 Project: dnn-binary-code-similarity - https://github.com/xiaojunxu/dnn-binary-code-similarity
+
 Copyright (c) 2017, Xiaojun Xu, Chang Liu, Qian Feng, Heng Yin, Le Song and Dawn Song. All rights reserved.
+
 License (3-Clause BSD): https://github.com/xiaojunxu/dnn-binary-code-similarity/blob/master/LICENSE
 
 # DNN Binary Code Similarity Detection
