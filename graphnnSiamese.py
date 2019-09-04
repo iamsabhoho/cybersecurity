@@ -3,17 +3,19 @@ import numpy as np
 import datetime
 from sklearn.metrics import roc_auc_score
 
-# X
-# msg_mask:    (?, ?, ?) (neighborhood mask)
-# N_x:         7 (# of features)
-# N_embed:     64 (embed dimension)
-# N_o:         64 (output dimension)
-# iter_level:  5 (iteration level)
-# Wnode:       (7, 64)
-# Wembed:      (64, 64), len=2
-# W_output:    (64, 2)
-# b_output:    (2, )
 def graph_embed(X, msg_mask, N_x, N_embed, N_o, iter_level, Wnode, Wembed, W_output, b_output):
+    """
+    : param msg_mask:    (?, ?, ?) (neighborhood mask)
+    : param N_x:         7         (# of features)
+    : param N_embed:     64        (embed dimension)
+    : param N_o:         64        (output dimension)
+    : param iter_level:  5         (iteration level)
+    : param Wnode:       (7, 64)
+    : param Wembed:      (64, 64), len=2
+    : param W_output:    (64, 2)
+    : param b_output:    (2, )
+    : return output:     (?, 2)
+    """
     # (?, ?, 64)
     node_val = tf.reshape(tf.matmul(tf.reshape(X, [-1, N_x]), Wnode), [tf.shape(X)[0], -1, N_embed])
 
@@ -42,7 +44,6 @@ def graph_embed(X, msg_mask, N_x, N_embed, N_o, iter_level, Wnode, Wembed, W_out
     g_embed = tf.reduce_sum(cur_msg, 1)
     output = tf.matmul(g_embed, W_output) + b_output
     
-    # (?, 2)
     return output
 
 
