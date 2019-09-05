@@ -8,7 +8,7 @@ License (BSD 3-Clause): https://github.com/xiaojunxu/dnn-binary-code-similarity/
 # DNN Binary Code Similarity Detection
 This repo provides an implementation of the Gemini network for binary code similarity detection in [this paper](https://arxiv.org/abs/1708.06525).
 
-## Prepration and Data
+## Preparation and Data
 Unzip the data by running:
 ```bash
 unzip data.zip
