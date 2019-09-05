@@ -91,6 +91,8 @@ if __name__ == '__main__':
     print("Dev: {} graphs, {} functions".format(len(Gs_dev), len(classes_dev)))
     print("Test: {} graphs, {} functions".format(len(Gs_test), len(classes_test)))
 
+    # for optimization only
+    # need one for train too if using it 
     # Fix the pairs for validation
     if os.path.isfile('data/valid.json'):
         with open('data/valid.json') as inf:
@@ -117,10 +119,10 @@ if __name__ == '__main__':
 
     # Train
     auc, fpr, tpr, thres = get_auc_epoch(gnn, Gs_train, classes_train,
-            BATCH_SIZE, load_data=valid_epoch)
+            BATCH_SIZE, load_data=None)
     gnn.say("Initial training auc = {0} @ {1}".format(auc, datetime.now()))
     auc0, fpr, tpr, thres = get_auc_epoch(gnn, Gs_dev, classes_dev,
-            BATCH_SIZE, load_data=valid_epoch)
+            BATCH_SIZE, load_data=None)
     gnn.say("Initial validation auc = {0} @ {1}".format(auc0, datetime.now()))
 
     best_auc = 0
@@ -131,11 +133,11 @@ if __name__ == '__main__':
 
         if (i % TEST_FREQ == 0):
             auc, fpr, tpr, thres = get_auc_epoch(gnn, Gs_train, classes_train,
-                    BATCH_SIZE, load_data=valid_epoch)
+                    BATCH_SIZE, load_data=None)
             gnn.say("Testing model: training auc = {0} @ {1}".format(
                 auc, datetime.now()))
             auc, fpr, tpr, thres = get_auc_epoch(gnn, Gs_dev, classes_dev,
-                    BATCH_SIZE, load_data=valid_epoch)
+                    BATCH_SIZE, load_data=None)
             gnn.say("Testing model: validation auc = {0} @ {1}".format(
                 auc, datetime.now()))
 
