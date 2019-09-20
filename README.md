@@ -1,4 +1,4 @@
-![malware](https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwi9676RnuDkAhUhPn0KHbIuAJwQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.cpomagazine.com%2Fcyber-security%2Fresearchers-trick-cylance-antivirus-into-thinking-malware-is-trusted-software%2F&psig=AOvVaw2ri43K7GZV6qOwhg3pQUmS&ust=1569097580315493)
+![malware](https://www.cpomagazine.com/wp-content/uploads/2019/08/researchers-trick-cylance-antivirus-into-thinking-malware-is-trusted-software_1500.jpg)
 
 # Introduction
 This is a project I did for GSI Technology internship 2019. 
