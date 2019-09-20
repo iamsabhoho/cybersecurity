@@ -1,3 +1,5 @@
+![malware](https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwi9676RnuDkAhUhPn0KHbIuAJwQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.cpomagazine.com%2Fcyber-security%2Fresearchers-trick-cylance-antivirus-into-thinking-malware-is-trusted-software%2F&psig=AOvVaw2ri43K7GZV6qOwhg3pQUmS&ust=1569097580315493)
+
 # Introduction
 This is a project I did for GSI Technology internship 2019. 
 This repo provides an implementation of the Gemini network for binary code similarity detection in [this paper](https://arxiv.org/abs/1708.06525).
