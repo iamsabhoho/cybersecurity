@@ -30,13 +30,14 @@ def get_f_dict(F_NAME):
     return name_dict
 
 class graph(object):
-    def __init__(self, node_num = 0, label = None, name = None):
+    def __init__(self, node_num = 0, label = None, name = None, fname=None):
         self.node_num = node_num
         self.label = label
         self.name = name
         self.features = []
         self.succs = []
         self.preds = []
+        self.fname = fname
         if (node_num > 0):
             for i in range(node_num):
                 self.features.append([])
@@ -76,8 +77,9 @@ def read_graph(F_NAME, FUNC_NAME_DICT, FEATURE_DIM):
             for line in inf:
                 g_info = json.loads(line.strip())
                 label = FUNC_NAME_DICT[g_info['fname']]
+
                 classes[label].append(len(graphs))
-                cur_graph = graph(g_info['n_num'], label, g_info['src'])
+                cur_graph = graph(g_info['n_num'], label, g_info['src'], g_info['fname'])
                 for u in range(g_info['n_num']):
                     cur_graph.features[u] = np.array(g_info['features'][u])
                     for v in g_info['succs'][u]:
@@ -259,3 +261,99 @@ def get_auc_epoch(model, graphs, classes, batch_size, load_data=None):
     model_auc = auc(fpr, tpr)
 
     return model_auc, fpr, tpr, thres
+
+# get embeddings 
+def get_vec(model, graphs, classes, batch_size):
+
+    epoch_data, ids_data = generate_epoch_pair(graphs, classes, batch_size, output_id=True)
+
+    epoch_data = epoch_data[:50000]
+    ids_data = ids_data[:50000]
+
+    # label lists
+    p_labels1, p_labels2 = [], []
+    n_labels1, n_labels2 = [], []
+    v1, v2 = [], []
+    p_gid1, p_gid2 = [], []
+    n_gid1, n_gid2 = [], []
+
+    master_gid1, master_gid2 = [], []
+    master_labels1, master_labels2 = [], []
+
+    # for 1 batch
+    for batch_id in range(len(epoch_data)):
+        X1, X2, m1, m2, y = epoch_data[batch_id]
+        pos_ids, neg_ids = ids_data[batch_id]
+
+        # for positive and negative labels 
+        for i in range(len(pos_ids)):
+            ### positive ###
+            pos_pair = pos_ids[i]
+            # graphs ids
+            p_gx1 = pos_pair[0]
+            p_gx2 = pos_pair[1]
+            p_gid1.append(p_gx1)
+            p_gid2.append(p_gx2)
+        
+            # labels
+            p_label1 = graphs[p_gx1].label
+            p_label2 = graphs[p_gx2].label
+            p_labels1.append(p_label1)
+            p_labels2.append(p_label2)
+
+        
+        for i in range(len(neg_ids)):
+            ### negative ###
+            neg_pair = neg_ids[i]
+            # graphs ids
+            n_gx1 = neg_pair[0]
+            n_gx2 = neg_pair[1]
+            n_gid1.append(n_gx1)
+            n_gid2.append(n_gx2)
+        
+            # labels
+            n_label1 = graphs[n_gx1].label
+            n_label2 = graphs[n_gx2].label
+            n_labels1.append(n_label1)
+            n_labels2.append(n_label2)
+
+
+        # embeddings
+        vec1 = model.get_embed(X1, m1)
+        vec2 = model.get_embed(X2, m2)
+
+        gid1 = p_gid1 + n_gid1
+        gid2 = p_gid2 + n_gid2
+
+        labels1 = p_labels1 + n_labels1
+        labels2 = p_labels2 + n_labels2
+
+        # flatten, all size 10
+        for i in range(len(gid1)):
+            master_gid1.append(gid1[i])
+
+        for i in range(len(gid2)):
+            master_gid2.append(gid2[i])
+
+        for i in range(len(labels1)):
+            master_labels1.append(labels1[i])
+
+        for i in range(len(labels2)):
+            master_labels2.append(labels2[i])
+
+        for i in range(len(X1)):
+            v1.append(vec1[i])
+            v2.append(vec2[i])  
+
+
+    merged_x1 = [(master_labels1[i], v1[i]) for i in range(len(v1))]
+    merged_x2 = [(master_labels2[i], v2[i]) for i in range(len(v2))]
+
+    output_keys = master_gid1 + master_gid2
+    output_vals = merged_x1 + merged_x2
+
+    d = dict(zip(output_keys, output_vals))
+    
+    return d
+
+
